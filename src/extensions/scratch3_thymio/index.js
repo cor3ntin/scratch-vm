@@ -280,33 +280,30 @@ class Thymio {
     setMotor (motor, value) {
         value = parseInt(value, 10) * 32 / 10; // from mm.s to Thymio's unit
         value = clamp(value, Thymio.VMIN, Thymio.VMAX);
-        const args = [value];
-
+      	
         log.info(`Set motor ${motor} to ${value}`);
 
         if (motor === 'left') {
-            this.sendAction('M_motor_left', args);
+			this.node.setVariables({"motor.left.target" : value});
         } else if (motor === 'right') {
-            this.sendAction('M_motor_right', args);
-        } else {
-            args.unshift(value);
-            this.sendAction('M_motors', args);
+			this.node.setVariables({"motor.right.target" : value});
+        } else {           
+			this.node.setVariables({"motor.right.target" : value,"motor.left.target" : value});			
         }
+		
     }
     /**
      * The robot stops.
      */
     stopMotors () {
         log.info('Stop all motors.');
-        const args = [0,0];
-        this.sendAction('M_motors', args);
+		this.node.setVariables({"motor.right.target" : 0,"motor.left.target" : 0});	
     }
     move (distance, callback) {
         const mm = parseInt(distance, 10);
         if (mm === 0) {
-            const args = [100 * 32 / 10,100 * 32 / 10]; // speed=10mm/s
-            this.sendAction('M_motors', args);
-
+            const args = [50 * 32 / 10,50 * 32 / 10]; // speed=10mm/s
+            this.sendAction('M_motors', args,callback);
         } else {
             let speed;
             if (Math.abs(mm) < 20) {
@@ -341,7 +338,7 @@ class Thymio {
 
         if (mm === 0) {
             const args = [speed * 32 / 10,speed * 32 / 10]; // speed=10mm/s
-            this.sendAction('M_motors', args);
+            this.sendAction('M_motors', args,callback);
         } else {
             const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
             speed = speed * 32 / 10;
@@ -410,13 +407,9 @@ class Thymio {
         speed = parseInt(Math.abs(speed), 10);
         speed = parseInt(clamp(speed, Thymio.VMIN * 10 / 32, Thymio.VMAX * 10 / 32), 10);
 
-        if (angle === 0) {//FIXME not working 
-            const largs = Array();
-            largs.push(speed * 32 / 10); // speed=10mm/s
-            const rargs = Array();
-            largs.push(-largs[0]); // speed=10mm/s
-            const args = [largs,rargs];
-            this.sendAction('M_motors', args);
+        if (angle === 0) { 
+            const args = [speed * 32 / 10,-speed * 32 / 10]; // speed=10mm/s
+            this.sendAction('M_motors', args,callback);
         } else {
             const time = Math.abs(angle) * 100 / speed; // time measured in 100 Hz ticks
             speed = speed * 32 / 10;
