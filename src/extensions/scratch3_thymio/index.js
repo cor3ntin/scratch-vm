@@ -239,8 +239,16 @@ class Thymio {
         //  Handshake Qmotion with timeout behavior
 		const actionId = Math.floor((Math.random() * 10000) + 1);//add random value to discar same command
 		this.sendAction(args[0], [actionId].concat(args.slice(1)), () => {
-			// Set message to look for in event "message" and execute callback (next block) when received
-			var addMotion = setInterval(()=>{log.info(`Timeout resend`);this.sendAction(args[0], [actionId].concat(args.slice(1)));},100);
+			// Set message to look for handshake in event "message" and execute callback (next block) when received
+			var resendcount=0;	
+			var addMotion = setInterval(()=>{											
+												this.sendAction(args[0], [actionId].concat(args.slice(1)));
+												if(++resendcount>15){ //only resend a fix number of time
+													log.info(`Fail to add Qmotion`);
+													clearInterval(addMotion);	
+												}
+												log.info(`Timeout resend ${resendcount}`);
+											},100);
 			this.eventCompleteCallback = (data, event) => {
 				if (event.match(/^Q_motion_added/)) {
 					log.info(`Q_motion_added ${addMotion}`);
