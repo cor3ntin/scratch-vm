@@ -219,6 +219,15 @@ class Thymio {
         this.node.emitEvents(action, args).then(callback);
         this.runtime.requestRedraw();
     }
+    
+    sendVariables (map, callback) {
+        if (this.node === null) {
+            log.warn(`Tried to send variables before having a connected node!`);
+            return;
+        }
+        this.node.setVariables(map).then(callback);
+        this.runtime.requestRedraw();
+    }
 
     sendActions (map, callback) {
         for (const [action, args] of Object.entries(map)) {
@@ -277,27 +286,27 @@ class Thymio {
      * @param {string} motor - Item of menu 'leftrightal'.
      * @param {value} value - Speed in Aseba unities.
      */
-    setMotor (motor, value) {
+    setMotor (motor, value, callback) {
         value = parseInt(value, 10) * 32 / 10; // from mm.s to Thymio's unit
         value = clamp(value, Thymio.VMIN, Thymio.VMAX);
       	
         log.info(`Set motor ${motor} to ${value}`);
 
         if (motor === 'left') {
-			this.node.setVariables({"motor.left.target" : value});
+            //this.node.setVariables({"motor.left.target" : value});
+            this.sendVariables({"motor.left.target" : value},callback);
         } else if (motor === 'right') {
-			this.node.setVariables({"motor.right.target" : value});
+            this.sendVariables({"motor.right.target" : value},callback);
         } else {           
-			this.node.setVariables({"motor.right.target" : value,"motor.left.target" : value});			
+            this.sendVariables({"motor.right.target" : value,"motor.left.target" : value},callback);
         }
-		
     }
     /**
      * The robot stops.
      */
     stopMotors () {
         log.info('Stop all motors.');
-		this.node.setVariables({"motor.right.target" : 0,"motor.left.target" : 0});	
+        this.sendVariables({"motor.right.target" : 0 ,"motor.left.target" : 0});
     }
     move (distance, callback) {
         const mm = parseInt(distance, 10);
@@ -1719,8 +1728,13 @@ class Scratch3ThymioBlocks {
      * @property {M} string - Item of menu 'leftrightall'.
      * @property {N} value - Speed in Aseba unities.
      */
-    setMotor (args) {
-        this.thymio.setMotor(args.M, Cast.toNumber(args.N));
+    setMotor (args,util) {
+        if (this._stackTimerNeedsInit(util)) {
+            this.thymio.setMotor(args.M, Cast.toNumber(args.N),() => this._stopStackTimer());
+            this._startStackTimer(util, 1000000);
+        } else {
+            this._checkStackTimer(util);
+        }
     }
     /**
      * Stop all motors.
