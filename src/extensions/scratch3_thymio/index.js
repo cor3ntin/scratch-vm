@@ -467,7 +467,7 @@ class Thymio {
      * @returns {number} value returned by a given position sensor.
      */
     getProximity (sensor) {
-        log.info(`Thymio called proximity ${sensor}`);
+        //log.info(`Thymio called proximity ${sensor}`);
 
         sensor = parseInt(sensor, 10);
         if (sensor >= 0 && sensor <= 6) {
