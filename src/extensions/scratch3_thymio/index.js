@@ -77,10 +77,10 @@ class Thymio {
         return 'ws://127.0.0.1:8597';
     }
     static get VMIN () {
-        return -500;
+        return -400;
     }
     static get VMAX () {
-        return 500;
+        return 400;
     }
     static get LMIN () {
         return 0;
@@ -390,16 +390,15 @@ class Thymio {
         this.requestSendQmotion(args, 2, callback);
     }
     turn (angle, callback) {
-        angle = parseInt(angle, 10);
+        angle = parseInt(angle, 10) * 0.785;
         let speed;
         let time;
-        if (Math.abs(angle) > 90) {
-            speed = 65 * 32 / 10;
-            time = Math.abs(angle) * 1.3;
+        if (Math.abs(angle) > 45) {
+            speed = 60 * 32 / 10;
+            time = Math.abs(angle) * 100 / 60;
         } else {
-            speed = 43 * 32 / 10;
-            time = Math.abs(angle) * 2.0;
-            time = angle * angle * 2.0 / ((Math.abs(angle) * 1.016) - 0.52); // nonlinear correction
+            speed = 30 * 32 / 10;
+			time = Math.abs(angle) * 100 / 30;
         }
 
         const args = Array();
@@ -412,7 +411,7 @@ class Thymio {
        this.requestSendQmotion(args, 2, callback);
     }
     turnWithSpeed (angle, speed, callback) {
-        angle = parseInt(angle, 10) * 0.78;
+        angle = parseInt(angle, 10) * 0.785;
         speed = parseInt(Math.abs(speed), 10);
         speed = parseInt(clamp(speed, Thymio.VMIN * 10 / 32, Thymio.VMAX * 10 / 32), 10);
 
@@ -440,7 +439,7 @@ class Thymio {
         }
     }
     turnWithTime (angle, time, callback) {
-        angle = parseInt(angle, 10) * 0.78;
+        angle = parseInt(angle, 10) * 0.785;
         time = parseInt(Math.abs(time), 10);
 
         let speed = Math.abs(angle) / time; // time measured in 100 Hz ticks
@@ -795,9 +794,9 @@ class Thymio {
         if (odo === 'direction') {
             return this.cachedValues.get('odo.degree')/1;
         } else if (odo === 'x') {
-            return this.cachedValues.get('odo.x') / 28;
+            return this.cachedValues.get('odo.x') / 31.7;
         } else if (odo === 'y') {
-            return this.cachedValues.get('odo.y') / 28;
+            return this.cachedValues.get('odo.y') / 31.7;
         }
     }
     motor (motor) {

@@ -85,9 +85,10 @@ onevent button.right
   end  
 
 onevent Q_set_odometer
-  odo.theta = (((event.args[0] + 360) % 360) - 90) * 182
-  odo.x = event.args[1] * 28
-  odo.y = event.args[2] * 28
+  event.args[0] = event.args[0] % 180
+  call math.muldiv(odo.theta,event.args[0],8192,45) 
+  odo.x = event.args[1]*79
+  odo.y = event.args[2]*79
 
 onevent Q_reset
   call math.fill(Qid,0)
@@ -217,13 +218,13 @@ sub motion_cancel
 
 onevent motor
   odo.delta = (motor.right.target + motor.left.target) / 2
-  call math.muldiv(tmp[0], (motor.right.target - motor.left.target), 3406, 10000)
+  call math.muldiv(tmp[0], (motor.left.target - motor.right.target), 3695, 10000)
   odo.theta += tmp[0]
   call math.cos(tmp[0:1],[odo.theta,16384-odo.theta])
   call math.muldiv(tmp[0:1], [odo.delta,odo.delta],tmp[0:1], [32767,32767])
-  odo.x += tmp[0]/45
-  odo.y += tmp[1]/45
-  odo.degree = 90 - (odo.theta / 182)
+  odo.x += tmp[0]/10
+  odo.y += tmp[1]/10
+  call math.muldiv(odo.degree,odo.theta,90,16384) 
   if Qtime[Qpc] > 0 then
     #emit Q_motion_started([Qid[Qpc], Qtime[Qpc], QspL[Qpc], QspR[Qpc], Qpc])
     Qtime[Qpc] = 0 - Qtime[Qpc]
