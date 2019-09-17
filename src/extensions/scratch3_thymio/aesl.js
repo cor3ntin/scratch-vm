@@ -23,11 +23,12 @@ const eventsDefinition = [
     {name: 'A_sound_system', fixed_size: 1},
     {name: 'A_sound_replay', fixed_size: 1},
     {name: 'A_sound_record', fixed_size: 1},
+	{name: 'A_noise_detect', fixed_size: 0},
     {name: 'M_motor_left', fixed_size: 1},
     {name: 'M_motor_right', fixed_size: 1},
     {name: 'M_motors', fixed_size: 2},
     {name: 'Q_reset', fixed_size: 0},
-    {name: 'tap', fixed_size: 0},
+    {name: 'Acc_tap', fixed_size: 0},
     {name: 'B_center', fixed_size: 0},
     {name: 'B_forward', fixed_size: 0},
     {name: 'B_backward', fixed_size: 0},
@@ -54,10 +55,13 @@ var odo.x = 0
 var odo.y = 0
 var odo.degree
 
-mic.threshold = 12
+mic.threshold = 250
 
 onevent tap
-  emit tap
+  emit Acc_tap
+  
+onevent mic
+  emit A_noise_detect
   
 onevent button.center
   if button.center == 1 then 

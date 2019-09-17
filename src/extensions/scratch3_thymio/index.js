@@ -117,6 +117,7 @@ class Thymio {
         const client = thymioApi.createClient(ws);
 
         this.tap = false;
+		this.noise = false;
         this.useHorizontalLeds = false;
 
         this.whenButtonCenter = false;
@@ -144,8 +145,11 @@ class Thymio {
                     node.onEvents = events => {
                         if (events) {
                             events.forEach((_, evt) => {
-                                if (evt === 'tap') {
+                                if (evt === 'Acc_tap') {
                                     this.tap = true;
+                                }
+								if (evt === 'A_noise_detect') {
+                                    this.noise = true;
                                 }
                                 if (evt === 'B_center') {
                                     this.whenButtonCenter = true;
@@ -767,8 +771,9 @@ class Thymio {
         return this.cachedValues.get('mic.intensity')*1;
     }
     soundDetected () {
-        const intensity = this.micIntensity();
-        return intensity > 2;
+        const noise = this.noise;
+		this.noise = false;
+        return noise;
     }
     bump () {
         const tap = this.tap;
