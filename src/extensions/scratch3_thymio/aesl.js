@@ -190,9 +190,9 @@ onevent prox
   call math.max(distance.back, prox.horizontal[5],prox.horizontal[6])
   call math.muldiv(distance.back, distance.back, 267,10000)
   call math.clamp(distance.back,125-distance.back,0,125)
-  call math.dot(angle.front, prox.horizontal,[4,3,0,-3,-4,0,0],9)
-  call math.dot(angle.back, prox.horizontal,[0,0,0,0,0,-4,4],9)
-  call math.dot(angle.ground, prox.ground.delta,[4,-4],7)
+  call math.dot(angle.front, prox.horizontal,[-4,-3,0,3,4,0,0],9)
+  call math.dot(angle.back, prox.horizontal,[0,0,0,0,0,4,-4],9)
+  call math.dot(angle.ground, prox.ground.delta,[-4,4],7)
 
 onevent Q_add_motion
   tmp[0:3] = event.args[0:3]
