@@ -806,7 +806,7 @@ class Thymio {
     nextDial (dir) {
         if (this._dial === -1) {
             this._dial = 0;
-        } else if (dir === 'left') {
+        } else if (dir === 'right') {
             this._dial = (this._dial + 1) % 8;
         } else {
             this._dial = (8 + (this._dial - 1)) % 8;
