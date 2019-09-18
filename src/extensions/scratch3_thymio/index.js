@@ -1066,7 +1066,7 @@ class Scratch3ThymioBlocks {
                     arguments: {
                         N: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: 90
+                            defaultValue: 45
                         },
                         S: {
                             type: ArgumentType.NUMBER,
@@ -1081,7 +1081,7 @@ class Scratch3ThymioBlocks {
                     arguments: {
                         N: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: 90
+                            defaultValue: 45
                         },
                         S: {
                             type: ArgumentType.NUMBER,
@@ -1111,7 +1111,7 @@ class Scratch3ThymioBlocks {
                     arguments: {
                         N: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: 90
+                            defaultValue: 0
                         },
                         O: {
                             type: ArgumentType.NUMBER,
