@@ -314,34 +314,29 @@ class Thymio {
     }
     move (distance, callback) {
         const mm = parseInt(distance, 10);
-        if (mm === 0) {
-            const args = [50 * 32 / 10,50 * 32 / 10]; // speed=10mm/s
-            this.sendAction('M_motors', args,callback);
-        } else {
-            let speed;
-            if (Math.abs(mm) < 20) {
-                speed = 20;
-            } else if (Math.abs(mm) > 150) {
-                speed = 150;
-            } else {
-                speed = Math.abs(mm);
-            }
-            const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
-            speed = speed * 32 / 10;
+		let speed;
+		if (Math.abs(mm) < 20) {
+			speed = 20;
+		} else if (Math.abs(mm) > 150) {
+			speed = 150;
+		} else {
+			speed = Math.abs(mm);
+		}
+		const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
+		speed = speed * 32 / 10;
 
-            const args = Array();
-            args.push('Q_add_motion');
-            args.push(time);
-            if (mm > 0) {
-                args.push(speed);
-                args.push(speed);
-            } else {
-                args.push(speed * -1);
-                args.push(speed * -1);
-            }
-			// Send request
-            this.requestSendQmotion(args, 2, callback);			
-        }
+		const args = Array();
+		args.push('Q_add_motion');
+		args.push(time);
+		if (mm > 0) {
+			args.push(speed);
+			args.push(speed);
+		} else {
+			args.push(speed * -1);
+			args.push(speed * -1);
+		}
+		// Send request
+		this.requestSendQmotion(args, 2, callback);			
     }
     moveWithSpeed (distance, speed, callback) {
         // Construct args to send with request
@@ -349,26 +344,21 @@ class Thymio {
         speed = parseInt(Math.abs(speed), 10);
         speed = parseInt(clamp(speed, Thymio.VMIN * 10 / 32, Thymio.VMAX * 10 / 32), 10);
 
-        if (mm === 0) {
-            const args = [speed * 32 / 10,speed * 32 / 10]; // speed=10mm/s
-            this.sendAction('M_motors', args,callback);
-        } else {
-            const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
-            speed = speed * 32 / 10;
+		const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
+		speed = speed * 32 / 10;
 
-            const args = Array();
-            args.push('Q_add_motion');
-            args.push(time);
-            if (mm > 0) {
-                args.push(speed);
-                args.push(speed);
-            } else {
-                args.push(speed * -1);
-                args.push(speed * -1);
-            }
-            // Send request
-            this.requestSendQmotion(args, 2, callback);
-        }
+		const args = Array();
+		args.push('Q_add_motion');
+		args.push(time);
+		if (mm > 0) {
+			args.push(speed);
+			args.push(speed);
+		} else {
+			args.push(speed * -1);
+			args.push(speed * -1);
+		}
+		// Send request
+		this.requestSendQmotion(args, 2, callback);
     }
     moveWithTime (distance, time, callback) {
         const mm = parseInt(distance, 10);
@@ -419,28 +409,23 @@ class Thymio {
         speed = parseInt(Math.abs(speed), 10);
         speed = parseInt(clamp(speed, Thymio.VMIN * 10 / 32, Thymio.VMAX * 10 / 32), 10);
 
-        if (angle === 0) { 
-            const args = [speed * 32 / 10,-speed * 32 / 10]; // speed=10mm/s
-            this.sendAction('M_motors', args,callback);
-        } else {
-            const time = Math.abs(angle) * 100 / speed; // time measured in 100 Hz ticks
-            speed = speed * 32 / 10;
+		const time = Math.abs(angle) * 100 / speed; // time measured in 100 Hz ticks
+		speed = speed * 32 / 10;
 
-            const args = Array();
-            args.push('Q_add_motion');
-            args.push(time);
+		const args = Array();
+		args.push('Q_add_motion');
+		args.push(time);
 
-            if (angle > 0) {
-                args.push(speed);
-                args.push(speed * -1);
-            } else {
-                args.push(speed * -1);
-                args.push(speed);
-            }
+		if (angle > 0) {
+			args.push(speed);
+			args.push(speed * -1);
+		} else {
+			args.push(speed * -1);
+			args.push(speed);
+		}
 
-            // Send request
-            this.requestSendQmotion(args, 2, callback);
-        }
+		// Send request
+		this.requestSendQmotion(args, 2, callback);
     }
     turnWithTime (angle, time, callback) {
         angle = parseInt(angle, 10) * 0.785;
