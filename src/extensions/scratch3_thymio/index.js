@@ -712,7 +712,7 @@ class Thymio {
         }
 
         const ratio = (Math.abs(radius) - 95) * 10000 / Math.abs(radius);
-        const time = (angle * ((50.36 * radius) + 25)) / 3600;
+        const time = Math.abs((angle * ((50.36 * radius) + 25)) / 3600);
 
         let vOut = 400;
         let vIn = vOut * ratio / 10000;
