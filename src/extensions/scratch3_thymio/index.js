@@ -293,7 +293,8 @@ class Thymio {
     setMotor (motor, value, callback) {
         value = parseInt(value, 10) * 32 / 10; // from mm.s to Thymio's unit
         value = clamp(value, Thymio.VMIN, Thymio.VMAX);
-      	
+        value = Math.round(value);
+        
         log.info(`Set motor ${motor} to ${value}`);
 
         if (motor === 'left') {
