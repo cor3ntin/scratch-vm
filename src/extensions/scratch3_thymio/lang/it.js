@@ -57,7 +57,7 @@ module.exports = {
             right: 'destro'
         },
         sensors: {
-            front: 'devanti',
+            front: 'davanti',
             back: 'dietro',
             ground: 'terreno'
         },
