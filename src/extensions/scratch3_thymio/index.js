@@ -1177,7 +1177,7 @@ class Scratch3ThymioBlocks {
                     arguments: {
                         L: {
                             type: ArgumentType.STRING,
-                            menu: 'leftright',
+                            menu: 'groundSensors',
                             defaultValue: 'left'
                         }
                     }
