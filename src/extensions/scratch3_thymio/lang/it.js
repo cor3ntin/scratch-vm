@@ -14,7 +14,7 @@ module.exports = {
         setLeds: 'porta LED [L] effetto colore a [C] ',
         changeLeds: 'cambia LED [L] l\'effetto colore di [C]',
         clearLeds: 'spegni LED',
-        nextDial: 'accendi il LED arancione succeccessivo a [L] del cerchio',
+        nextDial: 'accendi il LED arancione successivo a [L] del cerchio',
         ledsCircle: 'LED cerchio [A] [B] [C] [D] [E] [F] [G] [H]',
         ledsProxH: 'LED sensori pross. oriz. [A] [B] [C] [D] [E] [F] [G] [H]',
         ledsProxV: 'LED sensori terreno [A] [B]',

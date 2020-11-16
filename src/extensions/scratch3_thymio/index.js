@@ -797,7 +797,7 @@ class Thymio {
     nextDial (dir) {
         if (this._dial === -1) {
             this._dial = 0;
-        } else if (dir === 'right') {
+        } else if (dir === 1) {
             this._dial = (this._dial + 1) % 8;
         } else {
             this._dial = (8 + (this._dial - 1)) % 8;
@@ -1178,7 +1178,7 @@ class Scratch3ThymioBlocks {
                         L: {
                             type: ArgumentType.STRING,
                             menu: 'groundSensors',
-                            defaultValue: 'left'
+                            defaultValue: 0
                         }
                     }
                 },
