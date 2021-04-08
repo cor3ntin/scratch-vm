@@ -54,6 +54,7 @@ var odo.theta = 0
 var odo.x = 0
 var odo.y = 0
 var odo.degree
+var mic.filter = 0
 
 mic.threshold = 250
 
@@ -61,8 +62,19 @@ onevent tap
   emit Acc_tap
   
 onevent mic
-  emit A_noise_detect
-  
+  if motor.left.target<120 and motor.left.target>-120 and motor.right.target<120 and motor.right.target>-120 then
+  #motor low speed
+    emit A_noise_detect
+    mic.filter=0
+  else
+  #send less events
+  mic.filter +=1
+  if mic.filter > 10 then
+    emit A_noise_detect
+    mic.filter=0
+  end
+end  
+
 onevent button.center
   if button.center == 1 then 
     emit B_center
