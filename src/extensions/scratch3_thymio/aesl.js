@@ -219,11 +219,11 @@ sub motion_add
     Qid[Qnx]   = tmp[0]
     Qtime[Qnx] = tmp[1]
     QspL[Qnx]  = tmp[2]
-    QspR[Qnx]  = tmp[3]
-    emit Q_motion_added([Qid[Qnx], Qtime[Qnx], QspL[Qnx], QspR[Qnx], Qnx])
+    QspR[Qnx]  = tmp[3]   
     Qnx = (Qnx+1)%4
   end
-
+  emit Q_motion_added([Qid[Qnx], Qtime[Qnx], QspL[Qnx], QspR[Qnx], Qnx])
+  
 sub motion_cancel
   for tmp[1] in 1:4 do
     if Qid[tmp[1]-1] == tmp[0] then
@@ -251,7 +251,7 @@ onevent motor
     Qtime[Qpc] += 1
     if Qtime[Qpc] == 0 then
       #emit Q_motion_ended([Qid[Qpc], Qtime[Qpc], QspL[Qpc], QspR[Qpc], Qpc])
-      Qid[Qpc] = 0
+      #Qid[Qpc] = 0
       Qpc = (Qpc+1)%4
 
       if Qtime[Qpc] == 0 and Qpc == Qnx then
