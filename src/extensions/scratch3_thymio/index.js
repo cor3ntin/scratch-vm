@@ -36,6 +36,7 @@ const clamp = function (val, min, max) {
 };
 
 const makeLedsRGBVector = function (color) {
+    //log.info(`RGB = ${color}`);
     const rgb = [];
     switch (parseInt(color / 33, 10)) {
     case 0:
@@ -117,7 +118,7 @@ class Thymio {
         const client = thymioApi.createClient(ws);
 
         this.tap = false;
-		this.noise = false;
+        this.noise = false;
         this.useHorizontalLeds = false;
 
         this.whenButtonCenter = false;
@@ -148,7 +149,7 @@ class Thymio {
                                 if (evt === 'Acc_tap') {
                                     this.tap = true;
                                 }
-								if (evt === 'A_noise_detect') {
+                                if (evt === 'A_noise_detect') {
                                     this.noise = true;
                                 }
                                 if (evt === 'B_center') {
@@ -247,43 +248,43 @@ class Thymio {
         this.node.emitEvents(map).then(callback);
         this.runtime.requestRedraw();
     }
-	
-	requestSendQmotion (args, _, callback) {
+    
+    requestSendQmotion (args, _, callback) {
         //  Handshake Qmotion with timeout behavior
-		const actionId = Math.floor((Math.random() * 10000) + 1);//add random value to discar same command
-		this.sendAction(args[0], [actionId].concat(args.slice(1)), () => {
-			// Set message to look for handshake in event "message" and execute callback (next block) when received
-			var resendcount=0;	
-			var addMotion = setInterval(()=>{											
-												this.sendAction(args[0], [actionId].concat(args.slice(1)));
-												if(++resendcount>15){ //only resend a fix number of time
-													log.info(`Fail to add Qmotion`);
-													clearInterval(addMotion);	
-												}
-												log.info(`Timeout resend ${resendcount}`);
-											},100);
-			this.eventCompleteCallback = (data, event) => {
-				if (event.match(/^Q_motion_added/)) {
-					log.info(`Q_motion_added ${addMotion}`);
-					clearInterval(addMotion);
-					var endMotion=setTimeout(callback,(args[1]*10)+100);						
-					this.eventCompleteCallback = (data, event) => {
-						if (event.match(/^Q_motion_noneleft/)){
-							log.info(`Q_noneleft ${endMotion}`);
-							clearTimeout(endMotion);
-							callback();
-						}
-					};
-				}
-				else{
-					if (event.match(/^Q_motion_noneleft/)){
-						log.info(`Q_noneleft without add`);
-						clearInterval(addMotion);
-						callback();							
-					}					
-				}
-			};
-		});
+        const actionId = Math.floor((Math.random() * 10000) + 1);//add random value to discar same command
+        this.sendAction(args[0], [actionId].concat(args.slice(1)), () => {
+            // Set message to look for handshake in event "message" and execute callback (next block) when received
+            var resendcount=0;  
+            var addMotion = setInterval(()=>{                                           
+                                                this.sendAction(args[0], [actionId].concat(args.slice(1)));
+                                                if(++resendcount>15){ //only resend a fix number of time
+                                                    log.info(`Fail to add Qmotion`);
+                                                    clearInterval(addMotion);   
+                                                }
+                                                log.info(`Timeout resend ${resendcount}`);
+                                            },100);
+            this.eventCompleteCallback = (data, event) => {
+                if (event.match(/^Q_motion_added/)) {
+                    log.info(`Q_motion_added ${addMotion}`);
+                    clearInterval(addMotion);
+                    var endMotion=setTimeout(callback,(args[1]*10)+100);                        
+                    this.eventCompleteCallback = (data, event) => {
+                        if (event.match(/^Q_motion_noneleft/)){
+                            log.info(`Q_noneleft ${endMotion}`);
+                            clearTimeout(endMotion);
+                            callback();
+                        }
+                    };
+                }
+                else{
+                    if (event.match(/^Q_motion_noneleft/)){
+                        log.info(`Q_noneleft without add`);
+                        clearInterval(addMotion);
+                        callback();                         
+                    }                   
+                }
+            };
+        });
     }
     /**
      * Run the left/right/all motors.
@@ -315,29 +316,29 @@ class Thymio {
     }
     move (distance, callback) {
         const mm = parseInt(distance, 10);
-		let speed;
-		if (Math.abs(mm) < 20) {
-			speed = 20;
-		} else if (Math.abs(mm) > 150) {
-			speed = 150;
-		} else {
-			speed = Math.abs(mm);
-		}
-		const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
-		speed = speed * 32 / 10;
+        let speed;
+        if (Math.abs(mm) < 20) {
+            speed = 20;
+        } else if (Math.abs(mm) > 150) {
+            speed = 150;
+        } else {
+            speed = Math.abs(mm);
+        }
+        const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
+        speed = speed * 32 / 10;
 
-		const args = Array();
-		args.push('Q_add_motion');
-		args.push(time);
-		if (mm > 0) {
-			args.push(speed);
-			args.push(speed);
-		} else {
-			args.push(speed * -1);
-			args.push(speed * -1);
-		}
-		// Send request
-		this.requestSendQmotion(args, 2, callback);			
+        const args = Array();
+        args.push('Q_add_motion');
+        args.push(time);
+        if (mm > 0) {
+            args.push(speed);
+            args.push(speed);
+        } else {
+            args.push(speed * -1);
+            args.push(speed * -1);
+        }
+        // Send request
+        this.requestSendQmotion(args, 2, callback);         
     }
     moveWithSpeed (distance, speed, callback) {
         // Construct args to send with request
@@ -345,21 +346,21 @@ class Thymio {
         speed = parseInt(Math.abs(speed), 10);
         speed = parseInt(clamp(speed, Thymio.VMIN * 10 / 32, Thymio.VMAX * 10 / 32), 10);
 
-		const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
-		speed = speed * 32 / 10;
+        const time = Math.abs(mm) * 100 / speed; // time measured in 100 Hz ticks
+        speed = speed * 32 / 10;
 
-		const args = Array();
-		args.push('Q_add_motion');
-		args.push(time);
-		if (mm > 0) {
-			args.push(speed);
-			args.push(speed);
-		} else {
-			args.push(speed * -1);
-			args.push(speed * -1);
-		}
-		// Send request
-		this.requestSendQmotion(args, 2, callback);
+        const args = Array();
+        args.push('Q_add_motion');
+        args.push(time);
+        if (mm > 0) {
+            args.push(speed);
+            args.push(speed);
+        } else {
+            args.push(speed * -1);
+            args.push(speed * -1);
+        }
+        // Send request
+        this.requestSendQmotion(args, 2, callback);
     }
     moveWithTime (distance, time, callback) {
         const mm = parseInt(distance, 10);
@@ -381,7 +382,7 @@ class Thymio {
             args.push(speed * -1);
             args.push(speed * -1);
         }
-		// Send request
+        // Send request
         this.requestSendQmotion(args, 2, callback);
     }
     turn (angle, callback) {
@@ -393,7 +394,7 @@ class Thymio {
             time = Math.abs(angle) * 100 / 60;
         } else {
             speed = 30 * 32 / 10;
-			time = Math.abs(angle) * 100 / 30;
+            time = Math.abs(angle) * 100 / 30;
         }
 
         const args = Array();
@@ -410,23 +411,23 @@ class Thymio {
         speed = parseInt(Math.abs(speed), 10);
         speed = parseInt(clamp(speed, Thymio.VMIN * 10 / 32, Thymio.VMAX * 10 / 32), 10);
 
-		const time = Math.abs(angle) * 100 / speed; // time measured in 100 Hz ticks
-		speed = speed * 32 / 10;
+        const time = Math.abs(angle) * 100 / speed; // time measured in 100 Hz ticks
+        speed = speed * 32 / 10;
 
-		const args = Array();
-		args.push('Q_add_motion');
-		args.push(time);
+        const args = Array();
+        args.push('Q_add_motion');
+        args.push(time);
 
-		if (angle > 0) {
-			args.push(speed);
-			args.push(speed * -1);
-		} else {
-			args.push(speed * -1);
-			args.push(speed);
-		}
+        if (angle > 0) {
+            args.push(speed);
+            args.push(speed * -1);
+        } else {
+            args.push(speed * -1);
+            args.push(speed);
+        }
 
-		// Send request
-		this.requestSendQmotion(args, 2, callback);
+        // Send request
+        this.requestSendQmotion(args, 2, callback);
     }
     turnWithTime (angle, time, callback) {
         angle = parseInt(angle, 10) * 0.785;
@@ -447,7 +448,7 @@ class Thymio {
             args.push(speed);
         }
 
-		// Send request
+        // Send request
         this.requestSendQmotion(args, 2, callback);
     }
     /**
@@ -480,13 +481,13 @@ class Thymio {
      * @returns {number} Distance from an obstacle calculated from the given sensors
      */
     distance (sensor) {
-		 
+         
         if (sensor === 'front') {
             const s = this.cachedValues.get('distance.front');
-			return s*1;/* fix to display variable*/
+            return s*1;/* fix to display variable*/
         } else if (sensor === 'back') {
             const s = this.cachedValues.get('distance.back');
-			return s*1;/* fix to display variable*/
+            return s*1;/* fix to display variable*/
         }
         let ground = this.cachedValues.get('prox.ground.delta').reduce((a, b) => a + b, 0);
 
@@ -499,8 +500,8 @@ class Thymio {
      * calculated from the horizontal sensors of an obstacle.
      */
     angle (sensor) {
-		const s = this.cachedValues.get(`angle.${sensor}`);
-		return s*1;/* fix to display variable*/
+        const s = this.cachedValues.get(`angle.${sensor}`);
+        return s*1;/* fix to display variable*/
     }
     touchVal (sensor) {
         if (sensor === 'front') {
@@ -603,11 +604,12 @@ class Thymio {
         } else {
             mask = 7;
         }
-
+        //log.info(`Color = ${color}.`);
         const rgb = makeLedsRGBVector(color); // by default, "V_leds_top"
 
         if (mask === 1) {
             this.sendAction('V_leds_top', rgb, () => {
+                
                 this._leds[0] = color;
             });
         } else if (mask === 2) {
@@ -624,18 +626,20 @@ class Thymio {
             rgb.unshift(2);
             this.sendAction('V_leds_bottom', rgb, () => {
                 this._leds[1] = color;
-				this._leds[2] = color;
+                this._leds[2] = color;
             });
         } else {
             this.sendAction('V_leds_top_and_bottom', rgb, () => {
                 this._leds[0] = color;
-				this._leds[1] = color;
-				this._leds[2] = color;
+                this._leds[1] = color;
+                this._leds[2] = color;
             });
         }
     }
     changeLeds (led, color) {
+        color = parseInt(color, 10) % 198;
         let mask;
+        let temp;
         if (led === 'all') {
             mask = 7;
         } else if (led === 'top') {
@@ -649,47 +653,58 @@ class Thymio {
         } else {
             mask = 7;
         }
-
+        //log.info(`Color = ${color}.`);
+        
         if (mask === 1) {
-            const rgb = makeLedsRGBVector((parseInt(color + this._leds[0], 10) % 198));
+            //log.info(`Add Color = ${color} to ${this._leds[0]}.`);
+            temp = (color + this._leds[0])% 198;
+            const rgb = makeLedsRGBVector(temp);
             this.sendAction('V_leds_top', rgb, () => {
-                this._leds[0] = color + this._leds[0];
+                this._leds[0]=temp;
+                //log.info(`Result = ${this._leds[0]}.`);
             });
         } else if (mask === 2) {
-            const rgb = makeLedsRGBVector((parseInt(color + this._leds[1], 10) % 198));
+            temp = (color + this._leds[1])% 198;
+            const rgb = makeLedsRGBVector(temp);
             rgb.unshift(0);
             this.sendAction('V_leds_bottom', rgb, () => {
-                this._leds[1] = color + this._leds[1];
-            });
+                this._leds[1]=temp;
+            }); 
         } else if (mask === 4) {
-            const rgb = makeLedsRGBVector((parseInt(color + this._leds[2], 10) % 198));
+            temp = (color + this._leds[2])% 198;
+            const rgb = makeLedsRGBVector(temp);
             rgb.unshift(1);
             this.sendAction('V_leds_bottom', rgb, () => {
-                this._leds[2] = color + this._leds[2];
-            });
+                this._leds[2]=temp;
+            }); 
         } else if (mask === 6) {
-            let rgb = makeLedsRGBVector((parseInt(color + this._leds[1], 10) % 198));
+            temp = (color + this._leds[1])% 198;
+            let rgb = makeLedsRGBVector(temp);
             rgb.unshift(0);
             this.sendAction('V_leds_bottom', rgb, () => {
-                this._leds[1] = color + this._leds[1];
-                rgb = makeLedsRGBVector((parseInt(color + this._leds[2], 10) % 198));
+                this._leds[1] =temp;
+                temp = (color + this._leds[2])% 198;
+                rgb = makeLedsRGBVector(temp);
                 rgb.unshift(1);
                 this.sendAction('V_leds_bottom', rgb, () => {
-                    this._leds[2] = color + this._leds[2];
+                    this._leds[2] = temp;
                 });
             });
         } else {
-            let rgb = makeLedsRGBVector((parseInt(color + this._leds[0], 10) % 198));
+            temp = (color + this._leds[0])% 198;
+            let rgb = makeLedsRGBVector(temp);
             this.sendAction('V_leds_top', rgb, () => {
-                this._leds[0] = color + this._leds[0];
-                rgb = makeLedsRGBVector((parseInt(color + this._leds[1], 10) % 198));
+                this._leds[0] = temp;
+                temp = (color + this._leds[1])% 198;
+                rgb = makeLedsRGBVector(temp);
                 rgb.unshift(0);
                 this.sendAction('V_leds_bottom', rgb, () => {
-                    this._leds[1] = color + this._leds[1];
-                    rgb = makeLedsRGBVector((parseInt(color + this._leds[2], 10) % 198));
+                    this._leds[1] = temp;
+                    temp = (color + this._leds[2])% 198;
+                    rgb = makeLedsRGBVector(temp);
                     rgb.unshift(1);
                     this.sendAction('V_leds_bottom', rgb, () => {
-                        this._leds[2] = color + this._leds[2];
+                        this._leds[2] = temp;
                     });
                 });
             });
@@ -758,7 +773,7 @@ class Thymio {
     }
     soundDetected () {
         const noise = this.noise;
-		this.noise = false;
+        this.noise = false;
         return noise;
     }
     bump () {
