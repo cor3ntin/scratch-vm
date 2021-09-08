@@ -26,7 +26,7 @@ const formatMessage = require('format-message');
 const blockIconURI = require('./icon');
 
 const aesl = require('./aesl');
-const thymioApi = require('@mobsya/thymio-api');
+const thymioApi = require('@mobsya-association/thymio-api');
 const bytesToUuid = require('uuid/lib/bytesToUuid');
 
 
@@ -113,9 +113,10 @@ class Thymio {
         const url = new URL(location);
         const device = url.searchParams.get('device');
         const ws = url.searchParams.get('ws') || Thymio.TDM_DEFAULT_URL;
+        const password = url.searchParams.get('pass') || '';
 
         log.info(`Tries to connect with TDM on ${ws}.`);
-        const client = thymioApi.createClient(ws);
+        const client = thymioApi.createClient(ws, password);
 
         this.tap = false;
         this.noise = false;

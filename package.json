@@ -29,7 +29,7 @@
     "version": "json -f package.json -I -e \"this.repository.sha = '$(git log -n1 --pretty=format:%H)'\""
   },
   "dependencies": {
-    "@mobsya/thymio-api": "^0.10.2",
+    "@mobsya-association/thymio-api": "^0.11.0",
     "@vernier/godirect": "1.5.0",
     "arraybuffer-loader": "^1.0.6",
     "atob": "2.1.2",
@@ -43,6 +43,7 @@
     "jszip": "^3.2.0",
     "minilog": "3.1.0",
     "scratch-parser": "5.0.0",
+    "scratch-render-fonts": "^1.0.0-prerelease.20210401210003",
     "scratch-sb1-converter": "0.2.7",
     "scratch-translate-extension-languages": "0.0.20191118205314",
     "text-encoding": "0.7.0",
@@ -74,7 +75,7 @@
     "scratch-l10n": "^3.1.20190220143732",
     "scratch-render": "latest",
     "scratch-storage": "^1.2.2",
-    "scratch-svg-renderer": "latest",
+    "scratch-svg-renderer": "^0.2.0-prerelease.20210727023023",
     "script-loader": "0.7.2",
     "stats.js": "^0.17.0",
     "tap": "^12.6.0",
